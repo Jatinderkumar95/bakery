@@ -1,0 +1,3 @@
+In this article I will explain with an example, how to export data from database to CSV file in ASP.Net Core Razor Pages.
+The data from the database is fetched using Entity Framework and a Comma Separated (Delimited) string is generated using StringBuilder class.
+Finally, the generated string will be exported to CSV file in ASP.Net Core Razor Pages.

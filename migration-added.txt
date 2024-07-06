@@ -1,0 +1,15 @@
+dotnet add package Microsoft.EntityFrameworkCore
+
+dotnet add package Microsoft.EntityFrameworkCore.Sqlite
+
+dotnet add package Microsoft.EntityFrameworkCore.Design
+ 
+ dotnet tool install --global dotnet-ef --version 8.*
+
+ dotnet ef migrations add CreateDatabase --output-dir Data/Migrations
+
+ dotnet ef database update
+
+ ---For oprning up sql lite 
+ https://sqlitebrowser.org/
+
