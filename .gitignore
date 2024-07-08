@@ -1,2 +1,7 @@
 bin
 obj
+/.vs/bakery/v17
+*.user
+/.vs/bakery/FileContentIndex
+/.vs
+/.vscode
