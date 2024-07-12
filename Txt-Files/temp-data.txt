@@ -1,0 +1,9 @@
+TempData is a storage container for data that needs to be available to a separate HTTP request. The example for illustrating how TempData works involves providing feedback form to the user after a form submission that results in the user being redirected to another page (Post-Redirect-Get).
+
+Here is a very simple form:
+
+<form method="post">
+    <input type="text" asp-for="EmailAddress"/>
+    <span asp-validation-for="EmailAddress"></span><br/>
+    <button>Submit</button>
+</form>

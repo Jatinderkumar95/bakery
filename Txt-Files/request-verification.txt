@@ -1,0 +1,1 @@
+The form element itself is targeted by a form tag helper, which ensures that a request verification token is rendered as a hidden field within the form.

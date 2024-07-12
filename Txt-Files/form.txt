@@ -1,0 +1,83 @@
+Model binding is the process that takes values from HTTP requests and maps them to handler method parameters or PageModel properties. Model binding reduces the efforts of the developer to manually extract values from the request - from the URL or the request body for example - and then assign them, one by one, to variables or properties for later processing. This work can be repetitive, tedious and error prone.
+
+
+
+To begin, you will add some public properties to the OrderModel class marked on them the BindProperty attribute, which denotes the property as a binding target for values that the user will submit via the order form. The properties get values that you have submit in the form.
+
+
+
+The final attribute of interest - TempData - is not a data annotation attribute. Properties marked with this attribute have their values stored in the TempDataDictionary, which is a simple data structure that enables state to be retained for a short period (usually until the value is accessed). You will use it to store a confirmation message that will be accessed after the form has been submitted.
+
+
+-----------Checkbox---------------
+
+Checkboxes are used in a Razor Pages form to enable users to select zero or more predefined options. Checkboxes are a type of input element, and some aspects of their behaviour is unique and needs to be understood when deciding whether, and how to use them.
+
+Checkboxes are rendered in HTML by setting the type attribute in an input element to checkbox:
+
+<input type="checkbox">
+
+This appears in most browsers as a small box: . When it is selected, the box acquires a tick: . This state is indicated in HTML by the presence of a checked attribute on the element:
+
+<input type="checkbox" checked>
+
+You can also provide a value to the checked attribute. Any of the following are considered valid values according to the HTML 5 spec:
+
+<input type="checkbox" checked="">
+<input type="checkbox" checked="checked">
+<input type="checkbox" checked="CHECKED">
+
+Most browsers will understand any value as true, so even the following will result in the checkbox being checked:
+
+<input type="checkbox" checked="false">
+
+Note that if you pass a Razor expression to the checked attribute that evaluates to anything other than true, the checked attribute will not be rendered at all. So the following will result in the checked attribute being omitted from the generated HTML:
+
+<input type="checkbox" checked="@(1 == 0)">
+
+The value will only be submitted if the checkbox is checked. If nothing is specified for the value attribute, on will be submitted for a checkbox value:
+
+Razor offers two ways to generate checkboxes. The recommended approach is to use the input tag helper. Any boolean property of the PageModel will render a checkbox if it is passed to the asp-for attribute, the property is not nullable:
+
+public class IndexModel : PageModel
+{
+    public bool IsChecked { get; set; }
+    ...
+}
+
+You can also use a string property, so long as the value of the string can be parsed as a boolean value (true or false).
+
+The property name passed to the asp-for attribute is used for the values of both the id and name attributes. The rendered HTML will also include two fields for the IsChecked property:
+
+<input type="checkbox" data-val="true" data-val-required="The IsChecked field is required." id="IsChecked" name="IsChecked" value="true">
+<input name="IsChecked" type="hidden" value="false">
+
+The second field is a hidden field. It will be submitted regardless whether the checkbox is checked or not. If the checkbox is checked, the posted value will be true,false. The model binder will correctly extract true from the value. Otherwise it will be false. This behaviour is really a feature of MVC, where selection of which particular action to execute on a controller can decide to the parameters that the action method takes. The hidden field will ensure that the checkbox will correspond to a bool parameter of an action method, or a Razor Pages handler method.
+
+If you don't want a hidden field to be rendered, the workaround is to NOT use the tag helper to render your checkbox.
+
+The second mechanism for generating checkboxes is the CheckBox (and CheckBoxFor) Html helper method, which again are features of MVC. Nevertheless, it is worth understanding how these work since they are available from within a PageModel.
+
+The Html.CheckBox helper takes a string that is used to render the name and id attributes of the input element:
+
+@Html.CheckBox("IsChecked")
+
+There are overloads that enable you to set the checkbox as checked, and to provide additional arbitrary attributes:
+
+@Html.CheckBox("IsChecked", new { @class = "form-control" })
+The Html.CheckBoxFor helper is similar to the tag helper in that it takes an expression to be evaluated against the current model:
+
+@Html.CheckBoxFor(model => model.IsChecked)
+
+All of the examples above illustrate rendering a single checkbox to capture a single choice. Checkboxes can also be used to manage multiple selections. Checkboxes can be used with simple collections, such as those that permit the user to select one or more options from a prepared list, or they can be used in conjunction with a collection of complex objects.
+
+Parameters play no part in disambiguating between handlers based on the same HTTP method, despite the fact that the compiler will allow it. Therefore the same exception will be raised even if the OnGet method takes parameters and the OnGetAsync method doesn't.
+
+The model binder will bind those values to a collection whose property name matches the value of the name attribute of the elements and whose type supports conversion of the submitted values. In this case, a collection of type int will work, as well as a collection of string types:
+
+The key to this scenario is to ensure that the name attribute is the same for each input. Also, you should note that if you specify a non-boolean property in the asp-for attribute of an input tag helper, Razor renders an input whose type is set to text, so you must use plain HTML to render checkboxes that enable binding to a simple collection.
+
+In the next example, the checkbox is used to represent a boolean property of a complex type - the Dispatched property of an Order entity. You have a list of orders made this week. You have added a property to the PageModel to represent the data and ensured that posted values will be bound to it:
+
+[BindProperty]
+public List<Order> OrdersThisWeek { get; set; } = new List<Order>();

@@ -1,3 +1,11 @@
+The Mapper component handles the mapping of CQL table columns to fields in your classes.
+
+The Mapper component (previously known as cqlpoco) is a lightweight object mapper for Apache Cassandra. It lets you write queries with CQL, while it takes care of mapping rows returned from Cassandra to your classes.
+
+
+Apache Cassandra is an open-source NoSQL distributed database management system designed to handle large amounts of data across many servers without a single point of failure. Renowned for its scalability and high availability, it’s a perfect choice for applications that require robust, distributed data storage and management capabilities.
+
+
 Ensure you have installed the DataStax C# Driver via NuGet in your .NET project.
 
 PM> Install-Package CassandraCSharpDriver
