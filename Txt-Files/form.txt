@@ -81,3 +81,17 @@ In the next example, the checkbox is used to represent a boolean property of a c
 
 [BindProperty]
 public List<Order> OrdersThisWeek { get; set; } = new List<Order>();
+
+---------------
+
+Select lists or DropDown lists are used in a Razor Pages form to enable users to select zero or more predefined options. They are rendered in HTML as a select element, which acts as a container for a number of option elements, each representing an available choice.
+
+Select List Basics 
+The following example is used to illustrate the main features of these two HTML elements:
+
+<select name="number">
+    <option value="">Select a number</option>
+    <option value="1">One</option>
+    <option value="2">Two</option>
+    <option value="3">Three</option>
+</select>

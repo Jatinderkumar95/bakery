@@ -1,0 +1,17 @@
+﻿When you allow users to provide values that you then process, you need to ensure that the incoming values are of the expected data type, that they are within the permitted range and that required values are present. This process is known as input validation.
+
+
+
+You can validate user input in two places in a web application: in the browser using client-side script or the browser's in-built data type validation; and on the server. 
+
+The MVC framework, on which Razor Pages is built, includes a robust validation framework that works against inbound model properties on the client-side and on the server.
+
+Client-side validation should only ever be viewed as a courtesy to users, in that it provides immediate feedback to the user in the event that they have not provided satisfactory input. Your application must not rely solely on client-side validation because it is very easy to bypass by anyone who has a small amount of HTML/JavaScript knowledge.
+
+Client-side validation support is provided by the jQuery Validation library, developed by Microsoft. You must include jQuery Unobtrusive Validation within the page containing the form for client side validation to work. This is most easily accomplished by the inclusion of the _ValidationScriptsPartial.cshtml file (located in the Shared folder) within the page:
+
+Obviously, you should also ensure that jQuery is available to the page too.
+
+Client side validation works with special HTML5 data-* attributes emitted by tag helpers. To see how that works, here is a simple tag helper-based form featuring the properties above:
+
+Validation is activated by the inclusion of the data-val attribute with a value of true which has been applied to the span elements targeted by the validation message tag helper. Various other data-val-* attributes are added as part of the tag helper rendering to specify the type of validation required and the error message, which can be customised as part of the attribute declaration:

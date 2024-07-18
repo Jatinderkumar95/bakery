@@ -1,0 +1,1 @@
+﻿document.getElementById("orderpricesum").innerHTML = $('#Quantity').val() * 10;

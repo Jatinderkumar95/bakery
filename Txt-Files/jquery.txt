@@ -1,0 +1,27 @@
+﻿-------------------How to get the value in an input text box using jQuery ?-------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+How to get the value in an input text box using jQuery ?
+
+
+
+
+
+
+
+
+
+
+I have a template that I am using from template monster. In the files there is a javascript page that has all of the scripts needed to run the pages. I have added this to the bottom of the page where the scripts are rendered. It does not seem to be accessing the file. It is on the page and comes up when I am viewing it under the "Inspect object". When I put the code snippet directly in the razor page it works. Any ideas why it would not be pulling it from the javascript file? Thanks for your help. EDIT This resides in the _Layout page. Where the Menu is.

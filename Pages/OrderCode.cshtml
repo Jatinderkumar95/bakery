@@ -3,7 +3,7 @@
 @{
 }
 
-<form method="post" class="col-9">
+<form method="post" class="col-9" enctype="multipart/form-data">
     <div class="form-group mb-3">
         <label asp-for="OrderEmail" class="form-label"></label>
         <input asp-for="OrderEmail" class="form-control">
@@ -23,6 +23,9 @@
         <label asp-for="SubscribeNewsLetter" class="form-label"></label>
         <input checked="@(1 == 0)" asp-for="SubscribeNewsLetter">
     </div>
+    <div class="form-group mb-3">
+        <input type="file" asp-for="UploadedFile" />
+    </div>
     @* <div class="form-group mb-3">
         <label asp-for="SubscribeNewsLetterNullable" class="form-label"></label>
         <input checked="@(1 == 0)" asp-for="SubscribeNewsLetterNullable">
@@ -36,5 +39,26 @@
         <input type="text" name="test" class="form-control"/>
     </div> *@
 
+    <h5 id="orderpricesum"></h5>
     <button type="submit" class="btn bn-sm btn-primary">Place order</button>
 </form>
+
+
+@section scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#orderpricesum").text("Total sum: $ " + $("#Quantity").val() * 9.99);
+            
+            $("#Quantity").change(function () {
+               if($(this).val() < 1)
+                  {
+                   $(this).val(1);
+                  }
+                $("#orderpricesum").text("Total sum: $ " + $(this).val()  * 9.99);
+            });
+        })
+    </script>
+}
+@* // This is loaded before lauout scripts tags, giving error  *@
