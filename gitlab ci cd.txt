@@ -1,0 +1,20 @@
+Group jobs:
+. The jobs are ordered by comparing the numbers from left to right. You usually want the first number to be the index and the second number to be the total.
+
+touch car.txt
+. to create a empty file
+
+echo "chassis" > car.txt
+. > this sign output of echo command will be redirected to a file and will override the existing content of file
+
+echo "chassis" >? car.txt
+. >> this sign output of echo command will be redirected to a file and will append to the existing content of file
+
+greb:
+. is used for searching lines that matches to a regular expression 
+. it does a global search with the given rgex and prints all matching lines
+. Ex - greb "chassis" car.txt
+
+cat car.txt
+. for debugging purpose
+. prints the content of file
