@@ -1,3 +1,4 @@
+using bakery.Data;
 using bakery.Models;
 using Cassandra;
 using Cassandra.Mapping;
@@ -10,16 +11,24 @@ namespace bakery.Pages;
 public class IndexModel : PageModel
 {
     private readonly ILogger<IndexModel> _logger;
-
-    public IndexModel(ILogger<IndexModel> logger)
+    private BakeryContext _bakeryContext;
+    public List<Product> Products { get; set; }
+    public IndexModel(ILogger<IndexModel> logger, BakeryContext bakeryContext)
     {
         _logger = logger;
+        _bakeryContext = bakeryContext;
     }
 
     public async void OnGet()
     {
         try
         {
+            Products = new List<Product>()
+           {
+               new Product(){ Id = 1, Description = "Bangel Recipe", ImageName = "bangel.jfif",Name = "Bangel",Price = 12.99m}
+           };
+                //_bakeryContext.Products.ToList();
+
 
             var cluster = Cluster.Builder()
                     .WithDefaultKeyspace("xx")

@@ -1,8 +1,9 @@
 ﻿@page
 @model IndexModel
 @{
-    var numberSq = Enumerable.Range(1,10);
-    foreach(var number in numberSq){
+    var numberSq = Enumerable.Range(1, 10);
+    foreach (var number in numberSq)
+    {
         var j = @number;
         var i = number + 10;
     }
@@ -11,5 +12,14 @@
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+    <section class="product-list">
+        <article class="product-item">
+            <img class="product-image" src="~/img/carrot-cake.jfif" alt="carrot-cake" />
+            <h3 class="product-title">Carrot Cake</h3>
+            <p class="product-description">Reciepe for carrot cake</p>
+            <h5 class="product-price">Price</h5>
+            <button type="button">Order Now</button>
+        </article>
+    </section>
 </div>

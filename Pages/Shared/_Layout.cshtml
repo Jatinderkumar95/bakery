@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@inject bakery.Services.LayoutService LayoutService
+@{
+    var ratingViewModel = await LayoutService.GetRatingViewModel();
+}
+<!DOCTYPE html>
 <html lang="en">
 <head class="h-100">
     <meta charset="utf-8" />

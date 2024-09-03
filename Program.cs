@@ -1,5 +1,6 @@
 using bakery.CassandraMappings;
 using bakery.Data;
+using bakery.Services;
 using Cassandra;
 using Cassandra.Mapping;
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddDbContext<BakeryContext>();
+builder.Services.AddSingleton<LayoutService>();
 MappingConfiguration.Global.Define<CassandraMapping>();
 
 
