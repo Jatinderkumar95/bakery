@@ -35,6 +35,8 @@ namespace bakery.Pages
         //<input type="checkbox" checked="false">
         [BindProperty,Display(Name ="Subscribe news letter")]
         public bool SubscribeNewsLetter { get; set; }
+        [BindProperty,Display(Name ="Select Week")]
+        public string Weak { get; set; }
         //[BindProperty,Display(Name ="Subscribe news letter nullable")]
         //public bool? SubscribeNewsLetterNullable { get; set; }
         //[BindProperty,Display(Name ="Are checked")]

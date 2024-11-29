@@ -1,0 +1,174 @@
+﻿The `String.Equals` method in C# can throw an `ArgumentException` if the arguments provided to the method are not valid. Here are a few common scnarios:
+
+1. **Null Arguments**: If one or both of the strings being compared are `null`, it can lead to an exception. Ensure that neither string is `null` before calling `Equals`¹(https://www.tutorialsteacher.com/articles/compare-strings-in-csharp).
+
+2. **Invalid Comparison Type**: If you are using an overload of `String.Equals` that takes a `StringComparison` parameter, make sure the comparison type is valid. Invalid values can cause an `ArgumentException`²(https://learn.microsoft.com/en-us/dotnet/api/system.string.equals?view=net-8.0).
+
+
+The following example creates a string array that consists of an uppercase "I", a lowercase "i", and a dotless "ı". It then calls the Equals(String, StringComparison) method to compare them by using each possible StringComparison enumeration value.
+
+
+using System;
+
+class Sample 
+{
+   public static void Main() 
+   {
+      // Define a string array with the following three "I" characters:
+      //      U+0069, U+0131, and U+0049.  
+      string[] threeIs = { "i", "ı", "I" };
+      // Define Type object representing StringComparison type.
+      Type scType = typeof(StringComparison);  
+      
+      // Show the current culture (for culture-sensitive string comparisons).
+      Console.WriteLine("The current culture is {0}.\n", 
+                        System.Globalization.CultureInfo.CurrentCulture.Name);
+        
+      // Perform comparisons using each StringComparison member. 
+      foreach (string scName in Enum.GetNames(scType))
+      {
+         StringComparison sc = (StringComparison) Enum.Parse(scType, scName);
+         Console.WriteLine("Comparisons using {0}:", sc);
+         // Compare each character in character array.
+         for (int ctr = 0; ctr <= 1; ctr++)
+         {
+            string instanceChar = threeIs[ctr];
+            for (int innerCtr = ctr + 1; innerCtr <= threeIs.GetUpperBound(0); innerCtr++)
+            {
+               string otherChar = threeIs[innerCtr];
+               Console.WriteLine("{0} (U+{1}) = {2} (U+{3}): {4}", 
+                                 instanceChar, Convert.ToInt16(Char.Parse(instanceChar)).ToString("X4"), 
+                                 otherChar, Convert.ToInt16(Char.Parse(otherChar)).ToString("X4"), 
+                                 instanceChar.Equals(otherChar, sc));
+            }
+            Console.WriteLine();
+         }
+      }   
+   }
+}
+// The example displays the following output:
+//       The current culture is en-US.
+//       
+//       Comparisons using CurrentCulture ():
+//       i (U+0069) = ı (U+0131): False
+//       i (U+0069) = I (U+0049): False
+//       
+//       ı (U+0131) = I (U+0049): False
+//       
+//       Comparisons using CurrentCultureIgnoreCase:
+//       i (U+0069) = ı (U+0131): False
+//       i (U+0069) = I (U+0049): True
+//       
+//       ı (U+0131) = I (U+0049): False
+//       
+//       Comparisons using InvariantCulture:
+//       i (U+0069) = ı (U+0131): False
+//       i (U+0069) = I (U+0049): False
+//       
+//       ı (U+0131) = I (U+0049): False
+//       
+//       Comparisons using InvariantCultureIgnoreCase:
+//       i (U+0069) = ı (U+0131): False
+//       i (U+0069) = I (U+0049): True
+//       
+//       ı (U+0131) = I (U+0049): False
+//       
+//       Comparisons using Ordinal:
+//       i (U+0069) = ı (U+0131): False
+//       i (U+0069) = I (U+0049): False
+//       
+//       ı (U+0131) = I (U+0049): False
+//       
+//       Comparisons using OrdinalIgnoreCase:
+//       i (U+0069) = ı (U+0131): False
+//       i (U+0069) = I (U+0049): True
+//       
+//       ı (U+0131) = I (U+0049): False
+
+3. **Incorrect Usage**: Ensure that the method is being used correctly. For example, calling `Equals` on an object that is not a string can cause issues²(https://learn.microsoft.com/en-us/dotnet/api/system.string.equals?view=net-8.0).
+
+In C#, `InvariantCulture` is a property of the `CultureInfo` class that provides a culture-independent, case-insensitive comparison. It is often used when you need to ensure that string comparisons and operations are consistent regardless of the user's locale settings.
+
+### Key Points about `InvariantCulture`:
+
+1. **Culture-Independent**: It is not associated with any specific culture. This means it does not take into account cultural variations in formatting, casing, or sorting.
+
+2. **Consistency**: Using `InvariantCulture` ensures that string operations produce the same results on any machine, regardless of the system's culture settings. This is particularly useful for scenarios like file paths, protocol names, or any other strings that need to be compared or processed in a uniform way.
+
+3. **Case-Insensitive Comparisons**: When used with methods like `String.Equals`, `String.Compare`, or `String.ToLower`, it ensures that the comparison is case-insensitive and culture-independent.
+
+### Example Usage:
+
+Here's how you might use `InvariantCulture` with `String.Equals`:
+
+```csharp
+using System;
+using System.Globalization;
+
+class Program
+{
+    static void Main()
+    {
+        string str1 = "hello";
+        string str2 = "HELLO";
+
+        bool areEqual = str1.Equals(str2, StringComparison.InvariantCultureIgnoreCase);
+        Console.WriteLine($"Are the strings equal? {areEqual}");
+    }
+}
+```
+
+In this example, `StringComparison.InvariantCultureIgnoreCase` is used to compare the strings in a case-insensitive manner, ignoring cultural differences.
+
+Using `InvariantCulture` is a good practice when you need reliable and predictable string operations that are not affected by the user's locale settings. If you have any more questions or need further clarification, feel free to ask!
+
+In C#, an **ordinal comparison** compares strings based on the numeric values (Unicode code points) of their characters. This type of comparison is culture-insensitive and is often referred to as a binary comparison. Here are the key points:
+
+### Key Characteristics of Ordinal Comparison:
+1. **Binary Comparison**: It compares the numeric values of corresponding characters in the strings.
+2. **Case-Sensitive**: By default, it is case-sensitive, meaning "hello" and "HELLO" are considered different.
+3. **Culture-Insensitive**: It does not take into account any cultural rules or variations.
+
+### Usage:
+Ordinal comparisons are useful when you need a strict, byte-by-byte comparison of strings, such as in file paths, protocol names, or any other system-level identifiers.
+
+### Example:
+Here's an example of how to use ordinal comparison in C#:
+
+```csharp
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        string str1 = "hello";
+        string str2 = "HELLO";
+
+        // Case-sensitive ordinal comparison
+        bool areEqual = str1.Equals(str2, StringComparison.Ordinal);
+        Console.WriteLine($"Ordinal comparison: {areEqual}"); // Output: False
+
+        // Case-insensitive ordinal comparison
+        areEqual = str1.Equals(str2, StringComparison.OrdinalIgnoreCase);
+        Console.WriteLine($"Ordinal comparison (ignore case): {areEqual}"); // Output: True
+    }
+}
+```
+
+### Methods:
+- **String.Equals**: Can be used with `StringComparison.Ordinal` or `StringComparison.OrdinalIgnoreCase`.
+- **String.Compare**: Also supports ordinal comparisons.
+
+### When to Use:
+- **File Paths**: Ensuring paths are compared exactly as stored.
+- **Protocol Names**: Comparing protocol names in a case-sensitive manner.
+- **System Identifiers**: Any identifiers that should not be affected by cultural differences.
+
+Ordinal comparisons are a reliable way to ensure consistency and predictability in string operations, especially in scenarios where cultural variations should not affect the outcome¹(https://learn.microsoft.com/en-us/dotnet/csharp/how-to/compare-strings)²(https://learn.microsoft.com/en-us/dotnet/standard/base-types/best-practices-strings).
+
+If you have any more questions or need further clarification, feel free to ask!
+
+Source: Conversation with Copilot, 1/10/2024
+(1) How to compare strings - C# | Microsoft Learn. https://learn.microsoft.com/en-us/dotnet/csharp/how-to/compare-strings.
+(2) Best Practices for Comparing Strings in .NET - .NET. https://learn.microsoft.com/en-us/dotnet/standard/base-types/best-practices-strings.

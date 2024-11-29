@@ -5,3 +5,5 @@ obj
 /.vs/bakery/FileContentIndex
 /.vs
 /.vscode
+/node_modules/.bin
+/node_modules

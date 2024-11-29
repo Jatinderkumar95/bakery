@@ -25,3 +25,61 @@ How to get the value in an input text box using jQuery ?
 
 
 I have a template that I am using from template monster. In the files there is a javascript page that has all of the scripts needed to run the pages. I have added this to the bottom of the page where the scripts are rendered. It does not seem to be accessing the file. It is on the page and comes up when I am viewing it under the "Inspect object". When I put the code snippet directly in the razor page it works. Any ideas why it would not be pulling it from the javascript file? Thanks for your help. EDIT This resides in the _Layout page. Where the Menu is.
+
+
+The `data-*` attribute in HTML is used to store custom data on elements. This data can be accessed and manipulated using JavaScript or jQuery, making it useful for creating dynamic and interactive web applications.
+
+### HTML `data-*` Attribute
+The `data-*` attribute allows you to embed custom data attributes on any HTML element. The syntax is straightforward:
+```html
+<li data-animal-type="bird">Owl</li>
+<li data-animal-type="fish">Salmon</li>
+<li data-animal-type="spider">Tarantula</li>
+```
+In this example, each `<li>` element has a `data-animal-type` attribute that stores a string value¹(https://www.w3schools.com/TAGS/att_data-.asp).
+
+### Using `data-*` Attributes in jQuery
+jQuery provides the `.data()` method to work with these custom data attributes. Here’s how you can use it:
+
+#### Setting Data
+You can set data using the `.data()` method:
+```javascript
+$('li').data('animal-type', 'mammal');
+```
+This sets the `data-animal-type` attribute to "mammal" for all `<li>` elements.
+
+#### Getting Data
+To retrieve the data, you can use the same `.data()` method:
+```javascript
+var animalType = $('li').data('animal-type');
+console.log(animalType); // Outputs: mammal
+```
+This retrieves the value of the `data-animal-type` attribute²(https://api.jquery.com/data/).
+
+### Example
+Here’s a complete example that sets and gets data using jQuery:
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Data Attribute Example</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <ul>
+        <li data-animal-type="bird">Owl</li>
+        <li data-animal-type="fish">Salmon</li>
+        <li data-animal-type="spider">Tarantula</li>
+    </ul>
+    <script>
+        // Set data
+        $('li').data('animal-type', 'mammal');
+        
+        // Get data
+        $('li').each(function() {
+            console.log($(this).data('animal-type'));
+        });
+    </script>
+</body>
+</html>

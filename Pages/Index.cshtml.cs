@@ -1,10 +1,13 @@
 using bakery.Data;
+using bakery.HttpClientTypes;
 using bakery.Models;
+using bakery.Services;
 using Cassandra;
 using Cassandra.Mapping;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
+using System.Net.Http;
 
 namespace bakery.Pages;
 
@@ -13,16 +16,22 @@ public class IndexModel : PageModel
     private readonly ILogger<IndexModel> _logger;
     private BakeryContext _bakeryContext;
     public List<Product> Products { get; set; }
-    public IndexModel(ILogger<IndexModel> logger, BakeryContext bakeryContext)
+    public IHttpClientFactory GoogleClient { get; set; }
+    public IndexModel(ILogger<IndexModel> logger, BakeryContext bakeryContext, IHttpClientFactory googleClient)
     {
         _logger = logger;
         _bakeryContext = bakeryContext;
+        GoogleClient = googleClient;
     }
-
+    //https://juliocasal.com/blog/ASP.NET-Core-HttpClient-Tutorial
+    //https://positiwise.com/blog/how-to-use-cookies-in-asp-net-core#:~:text=To%20do%20so%2C%20implement%20the,method%20with%20its%20overloaded%20version.
     public async void OnGet()
     {
         try
         {
+            var googleCLient = GoogleClient.CreateClient(nameof(PremierProductModelWrapper));
+            googleCLient.DefaultRequestHeaders.Add("test", string.Empty);
+            var httpResponse = await googleCLient.GetAsync("https://google.com");
             Products = new List<Product>()
            {
                new Product(){ Id = 1, Description = "Bangel Recipe", ImageName = "bangel.jfif",Name = "Bangel",Price = 12.99m}
