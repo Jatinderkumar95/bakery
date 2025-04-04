@@ -1,13 +1,13 @@
 using bakery.Data;
 using bakery.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Net;
+using Polly;
+using Polly.Retry;
+using System;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using static bakery.Pages.GetSystemTechSpecContentResponse;
-using static bakery.Pages.OrderReportModel;
 
 namespace bakery.Pages
 {
@@ -30,19 +30,46 @@ namespace bakery.Pages
         };
         public async Task OnGet()
         {
+
+
+            var taskList = new Task[10];
+
+            for (int i = 0; i < taskList.Length; i++)
+            {
+                var retryPolicy = CreateRetryPolicy();
+                taskList[i] = retryPolicy.ExecuteAsync(CallContentAPI);
+            }
+            await Task.WhenAll(taskList);
+            
+            Orders = context.Orders.ToList();
+        }
+        AsyncRetryPolicy CreateRetryPolicy()
+        {
+            Random random = new Random();
+           return Policy.Handle<Exception>().WaitAndRetryAsync(5, retryAttempt =>
+            {
+                // Exponential backoff with jitter
+                double exponentialBackoff = Math.Pow(2, retryAttempt);
+                double jitter = random.NextDouble(); // Random value between 0 and 1
+                TimeSpan delay = TimeSpan.FromSeconds(exponentialBackoff + jitter);
+                Console.WriteLine($"Retrying in {delay.TotalSeconds} seconds...");
+                return delay;
+            });
+            
+        }
+        async Task<string> CallContentAPI()
+        {
             var request = new GetSystemTechSpecContentRequest()
             {
                 Segment = lwp.Segment,
                 ProductCodes = new List<string>() { "laptop" },
                 SkipCache = true,
-                Country = lwp.Country,
                 ProductType = "Product",
-                Language = lwp.Language,
                 Region = lwp.Region
             };
             var content = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
             var httpCLient = _httpClientFactory.CreateClient(nameof(OrderReportModel));
-            var response = await httpCLient.PostAsync("contentapi", default);
+            var response = await httpCLient.PostAsync("https://contentstudiobatch-api-approved.dell.com/api/SystemProductContent/GetSystemTechSpecContent", default);
             var result = await response.Content?.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
@@ -51,9 +78,8 @@ namespace bakery.Pages
                 if (contentStudioResponse != null && contentStudioResponse.Count != 0)
                     regulatory = GetParentSysProdTechSpecByTemplateNameId(contentStudioResponse, "reg");
             }
-            Orders = context.Orders.ToList();
+            return "Success";
         }
-
         public SysProdTechSpec GetParentSysProdTechSpecByTemplateNameId(List<TechSpecContent> response, string templateNameId)
         {
             foreach (var techSpecContent in response)

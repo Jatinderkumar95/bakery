@@ -22,7 +22,6 @@ namespace bakery.HttpClientTypes
             //        "Bearer",
             //        accessToken);
             //}
-
             return await base.SendAsync(request, cancellationToken);
         }
     }
